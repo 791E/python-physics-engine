@@ -50,5 +50,12 @@ class Ball(Body):
         self.ball_attributes = ball_attr
 
 
+    def print_attrs(self):
+        super().print_attrs()
+        for field in fields(self.ball_attributes):
+            value = getattr(self.ball_attributes, field.name)
+            print(f"{field.name}: {value}")
+
+
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""
