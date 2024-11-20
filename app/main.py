@@ -8,7 +8,7 @@ screen: pygame.Surface = pygame.display.set_mode((1280, 720), flags=pygame.RESIZ
 clock: pygame.time.Clock = pygame.time.Clock()
 RUNNING: bool = True
 
-ball = body.Ball(body.BallAttributes(0, 0, 10, 0, 1, (255, 0, 0), 1))
+ball = body.Ball(body.BodyAttributes(0, 0, 10, 0, 1, (255, 0, 0), 1), body.BallAttributes(1))
 ball.print_attrs()
 
 while RUNNING:
