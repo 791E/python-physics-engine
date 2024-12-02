@@ -39,7 +39,7 @@ class BodyAttributes:
     bounding_box_radius: float = 1
 
 
-class Body:
+class _Body:
     """
     A general class for different bodies. Should not be used on it's own,
     but rather be extended to different kinds of bodies.
@@ -109,7 +109,7 @@ class BallAttributes:
     r: float = 0
 
 
-class Ball(Body):
+class Ball(_Body):
     """The simplest shape for collisions: a ball"""
 
     def __init__(
@@ -135,4 +135,10 @@ class Ball(Body):
             print(f"{field.name}: {value}")
 
     def draw(self, screen: pygame.Surface) -> None:
-        """Draw itself at it's position on the pygame screen"""
+        """Draw itself at it's position on the pygame surface"""
+        pygame.draw.circle(
+            screen,
+            self.attributes.col,
+            [self.x.pos, self.y.pos],
+            self.ball_attributes.r,
+        )
