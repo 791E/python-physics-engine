@@ -56,7 +56,8 @@ class _Body:
         attr: BodyAttributes,
     ):
         """
-        Should not be initialized on itself, but rather with 'super().__init__(attr)'
+        Should not be initialized on itself, but rather with
+        'super().__init__(x_attr, y_attr, attr)'
         from a subclass's __init__ constructor
 
         Args:
@@ -135,10 +136,35 @@ class Ball(_Body):
             print(f"{field.name}: {value}")
 
     def draw(self, screen: pygame.Surface) -> None:
-        """Draw itself at it's position on the pygame surface"""
+        """Draw itself at it's position on the pygame screen"""
         pygame.draw.circle(
             screen,
             self.attributes.col,
             [self.x.pos, self.y.pos],
             self.ball_attributes.r,
         )
+
+
+class Polygon(_Body):
+    """A more complex shape with collision and rotation"""
+
+    def __init__(
+        self,
+        x_attr: CoordinateAttributes,
+        y_attr: CoordinateAttributes,
+        attr: BodyAttributes,
+        vertices: tuple[tuple[int, int],...],
+    ):
+        super().__init__(x_attr, y_attr, attr)
+        self.vertices = vertices
+
+    def print_attrs(self):
+        super().print_attrs()
+        print("\nPolygon specific attributes")
+        print("Vertices:")
+        for i in len(self.vertices):
+            print(f"Vertex at index {i}: {self.vertices[i]}")
+
+    def draw(self, screen: pygame.Surface) -> None:
+        """Draw itself at it's position on the pygame screen"""
+        pygame.draw.polygon(screen, self.attributes.col, self.vertices)
