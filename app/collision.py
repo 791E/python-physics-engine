@@ -1,11 +1,11 @@
 """Calculate collisions for all collision-enabled objects using a spacial hash map"""
 
 import math
-from body import Body
+from body import _Body
 
 
 def ball_ball_collisions(
-    spacial_map: dict[tuple[int, int], list[Body]], radius: int
+    spacial_map: dict[tuple[int, int], list[_Body]], radius: int
 ) -> None:
     """
     Calculates collisions between two bodies based on the spacial hash map.
@@ -25,17 +25,17 @@ def ball_ball_collisions(
         for i, ball1 in enumerate(cell_balls):
             for _, ball2 in enumerate(cell_balls[i + 1 :]):
                 # Check distance between the two balls
-                dx = ball1.attributes.x - ball2.attributes.x
-                dy = ball1.attributes.y - ball2.attributes.y
+                dx = ball1.x.pos - ball2.x.pos
+                dy = ball1.y.pos - ball2.y.pos
                 # TODO: don't use math (use numpy)
                 distance = math.sqrt(dx**2 + dy**2)
                 if distance < 2 * radius:
                     # Simple collision response: swap velocities
-                    ball1.attributes.vx, ball2.attributes.vx = (
-                        ball2.attributes.vx,
-                        ball1.attributes.vx,
+                    ball1.x.vel, ball2.x.vel = (
+                        ball2.x.pos,
+                        ball1.x.pos,
                     )
-                    ball1.attributes.vy, ball2.attributes.vy = (
-                        ball2.attributes.vy,
-                        ball1.attributes.vy,
+                    ball1.y.vel, ball2.y.vel = (
+                        ball2.y.vel,
+                        ball1.y.vel,
                     )
