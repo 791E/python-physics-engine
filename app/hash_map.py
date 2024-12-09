@@ -1,6 +1,6 @@
 """Module for the creation of spacial hash maps"""
 
-from body import Body
+from body import _Body
 
 
 def get_spacial_cell(
@@ -36,8 +36,8 @@ def get_spacial_cell(
 
 
 def generate_map(
-    bodies: list[Body], grid_size: int
-) -> dict[tuple[int, int], list[Body]]:
+    bodies: list[_Body], grid_size: int
+) -> dict[tuple[int, int], list[_Body]]:
     """
     Generate a dictionary of cells populated with balls
 
@@ -52,8 +52,8 @@ def generate_map(
     spacial_map: dict = {}
     for i in bodies:
         cells = get_spacial_cell(
-            i.attributes.x,
-            i.attributes.y,
+            i.x.pos,
+            i.y.pos,
             i.attributes.bounding_box_radius,
             grid_size,
         )
