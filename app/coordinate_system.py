@@ -5,6 +5,7 @@ Credits to @DanceMonkey276 on GitHub, <https://github.com/DanceMonkey276/>
 
 import pygame
 
+
 class CoordSys:
     """Apply a 1000x1500 coordinate system to a pygame screen"""
 
@@ -37,32 +38,23 @@ class CoordSys:
     def distance(self, d: float) -> float:
         """Return the distance in the coordinate system as pixels on the pygame screen
 
-        Parameters
-        ----------
-        d : float
-            The distance which will be converted
+        Args:
+            d (float): The distance which will be converted
 
-        Returns
-        -------
-        float
-            The distance in pixels on the pygame screen
+        Returns:
+            float: The distance in pixels on the pygame screen
         """
         return self._update_dimensions()[0] * d
 
     def coord(self, x: float, y: float) -> tuple[float, float]:
         """Return the coordinate in the coordinate system as coordinate on the pygame screen
 
-        Parameters
-        ----------
-        x : float
-            The x-coordinate which will be converted
-        y : float
-            The y-coordinate which will be converted
+        Args:
+            x (float): The x-coordinate which will be converted
+            y (float): The y-coordinate which will be converted
 
-        Returns
-        -------
-        Tuple[float, float]
-            The coordinate on the screen
+        Returns:
+            Tuple[float, float]: The coordinate on the screen
         """
         scale, _, h, x_off, y_off = self._update_dimensions()
         return (
