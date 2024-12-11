@@ -1,7 +1,7 @@
 """Calculate collisions for all collision-enabled objects using a spacial hash map"""
 
 import math
-from body import _Body
+from .body import _Body
 
 
 def ball_ball_collisions(

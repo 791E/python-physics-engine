@@ -1,6 +1,6 @@
 """Module for the creation of spacial hash maps"""
 
-from body import _Body
+from .body import _Body
 
 
 def get_spacial_cell(
