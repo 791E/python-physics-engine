@@ -7,12 +7,12 @@ import pygame
 
 
 class CoordSys:
-    """Apply a 1000x1500 coordinate system to a pygame screen"""
+    """Apply a coordinate system to a pygame screen"""
 
-    def __init__(self, display: pygame.Surface) -> None:
+    def __init__(self, display: pygame.Surface, x_length: int = 1280, y_length: int = 720) -> None:
         self.display: pygame.Surface = display
-        self.x_tot: int = 1500
-        self.y_tot: int = 1000
+        self.x_tot: int = x_length
+        self.y_tot: int = y_length
 
     def __repr__(self) -> str:
         return f"< Coordinate System ([0, {self.x_tot}], [0, {self.y_tot}]) >"
