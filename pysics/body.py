@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, fields
 import pygame
+from .coordinate_system import CoordSys
 
 
 @dataclass
@@ -33,6 +34,7 @@ class BodyAttributes:
             that can be drawn around the body
     """
 
+    coord_sys: CoordSys
     dt: float = 1
     m: float = 1
     col: tuple[int, ...] = (255, 255, 255, 255)
@@ -91,8 +93,8 @@ class _Body:
 
     def update_pos(self) -> None:
         """Calculate the body's new position based on position, velocity and acceleration"""
-        self.x.pos = self.x.vel * self.attributes.dt
-        self.y.pos = self.y.vel * self.attributes.dt
+        self.x.pos = self.x.pos + self.x.vel * self.attributes.dt
+        self.y.pos = self.y.pos + self.y.vel * self.attributes.dt
 
         self.x.vel = self.x.vel + self.x.accel * self.attributes.dt
         self.y.vel = self.y.vel + self.y.accel * self.attributes.dt
@@ -140,9 +142,32 @@ class Ball(_Body):
         pygame.draw.circle(
             screen,
             self.attributes.col,
-            [self.x.pos, self.y.pos],
-            self.ball_attributes.r,
+            self.attributes.coord_sys.coord(self.x.pos, self.y.pos),
+            self.attributes.coord_sys.distance(self.ball_attributes.r),
         )
+
+    def update_pos(self, wall_collision: bool = True) -> None:
+        """
+        Update position and check for collisions with the walls.
+
+        Args:
+            wall_collision (bool): Whether collision with the walls should
+            be performed or not.
+        """
+        super().update_pos()
+
+        if wall_collision:
+            if (
+                self.x.pos >= self.attributes.coord_sys.x_tot - self.ball_attributes.r
+                or self.x.pos <= self.ball_attributes.r
+            ):
+                self.x.vel = -self.x.vel
+
+            if (
+                self.y.pos >= self.attributes.coord_sys.y_tot - self.ball_attributes.r
+                or self.y.pos <= self.ball_attributes.r
+            ):
+                self.y.vel = -self.y.vel
 
 
 class Polygon(_Body):
@@ -153,7 +178,7 @@ class Polygon(_Body):
         x_attr: CoordinateAttributes,
         y_attr: CoordinateAttributes,
         attr: BodyAttributes,
-        vertices: tuple[tuple[int, int],...],
+        vertices: tuple[tuple[int, int], ...],
     ):
         super().__init__(x_attr, y_attr, attr)
         self.vertices = vertices
@@ -167,4 +192,9 @@ class Polygon(_Body):
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""
-        pygame.draw.polygon(screen, self.attributes.col, self.vertices)
+        screen_vertices = []
+        for vertex in self.vertices:
+            screen_vertices.append(
+                self.attributes.coord_sys.coord(vertex[0], vertex[1])
+            )
+        pygame.draw.polygon(screen, self.attributes.col, screen_vertices)
