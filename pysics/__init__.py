@@ -1,6 +1,7 @@
 """
 pysics: a physics engine for the python library 'pygame'
 """
-__all__ = ["body", "collision", "coordinate_system", "hash_map"]
+from . import body, collision, hash_map
+from .coordinate_system import CoordSys
 
-from . import body, collision, coordinate_system, hash_map
+__all__ = ["body", "collision", "CoordSys", "hash_map"]
