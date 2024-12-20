@@ -3,22 +3,7 @@
 from dataclasses import dataclass, fields
 import pygame
 from .coordinate_system import CoordSys
-
-
-@dataclass
-class CoordinateAttributes:
-    """
-    Attributes such as coordinates and velocity for bodies
-
-    Args:
-        pos (float): Position of the body
-        vel (float): Velocity of the body
-        accel (float): Acceleration of the body
-    """
-
-    pos: float = 0
-    vel: float = 0
-    accel: float = 0
+from .math_core import Vec2D
 
 
 @dataclass
@@ -53,8 +38,9 @@ class _Body:
 
     def __init__(
         self,
-        x_attr: CoordinateAttributes,
-        y_attr: CoordinateAttributes,
+        pos_vec: tuple[float, float],
+        vel_vec: tuple[float, float],
+        accel_vec: tuple[float, float],
         attr: BodyAttributes,
     ):
         """
@@ -70,8 +56,9 @@ class _Body:
             attr (BodyAttributes): Non-coordinate attributes that can be used
                 by any subclass of 'Body'
         """
-        self.x = x_attr
-        self.y = y_attr
+        self.pos = Vec2D(*pos_vec)
+        self.vel = Vec2D(*vel_vec)
+        self.accel = Vec2D(*accel_vec)
         self.attributes = attr
 
     def print_attrs(self) -> None:
@@ -81,23 +68,14 @@ class _Body:
             value = getattr(self.attributes, field.name)
             print(f"{field.name}: {value}")
 
-        print("\nx coordinate attributes:")
-        for field in fields(self.x):
-            value = getattr(self.x, field.name)
-            print(f"{field.name}: {value}")
+        print("\nCoordinate related attributes")
 
-        print("\ny coordinate attributes:")
-        for field in fields(self.y):
-            value = getattr(self.y, field.name)
-            print(f"{field.name}: {value}")
 
     def update_pos(self) -> None:
         """Calculate the body's new position based on position, velocity and acceleration"""
-        self.x.pos = self.x.pos + self.x.vel * self.attributes.dt
-        self.y.pos = self.y.pos + self.y.vel * self.attributes.dt
+        self.pos = self.pos + self.vel * self.attributes.dt
 
-        self.x.vel = self.x.vel + self.x.accel * self.attributes.dt
-        self.y.vel = self.y.vel + self.y.accel * self.attributes.dt
+        self.vel = self.vel.components + self.accel.components * self.attributes.dt
 
 
 @dataclass
@@ -117,8 +95,9 @@ class Ball(_Body):
 
     def __init__(
         self,
-        x_attr: CoordinateAttributes,
-        y_attr: CoordinateAttributes,
+        pos_vec: tuple[float, float],
+        vel_vec: tuple[float, float],
+        accel_vec: tuple[float, float],
         attr: BodyAttributes,
         ball_attr: BallAttributes,
     ):
@@ -127,7 +106,7 @@ class Ball(_Body):
             attr (BodyAttributes): Attributes that could be used for any Body
             ball_attr (BallAttributes): Ball specific attributes
         """
-        super().__init__(x_attr, y_attr, attr)
+        super().__init__(pos_vec, vel_vec, accel_vec, attr)
         self.ball_attributes = ball_attr
 
     def print_attrs(self):
@@ -142,7 +121,7 @@ class Ball(_Body):
         pygame.draw.circle(
             screen,
             self.attributes.col,
-            self.attributes.coord_sys.coord(self.x.pos, self.y.pos),
+            self.attributes.coord_sys.coord(*self.pos),
             self.attributes.coord_sys.distance(self.ball_attributes.r),
         )
 
@@ -157,17 +136,10 @@ class Ball(_Body):
         super().update_pos()
 
         if wall_collision:
-            if (
-                self.x.pos >= self.attributes.coord_sys.x_tot - self.ball_attributes.r
-                or self.x.pos <= self.ball_attributes.r
-            ):
-                self.x.vel = -self.x.vel
-
-            if (
-                self.y.pos >= self.attributes.coord_sys.y_tot - self.ball_attributes.r
-                or self.y.pos <= self.ball_attributes.r
-            ):
-                self.y.vel = -self.y.vel
+            if not self.pos.components[0] in range(self.attributes.coord_sys.x_tot):
+                self.pos.components[0] *= -1
+            if not self.pos.components[1] in range(self.attributes.coord_sys.y_tot):
+                self.pos.components[1] *= -1
 
 
 class Polygon(_Body):
@@ -175,13 +147,16 @@ class Polygon(_Body):
 
     def __init__(
         self,
-        x_attr: CoordinateAttributes,
-        y_attr: CoordinateAttributes,
+        pos_vec: tuple[float, float],
+        vel_vec: tuple[float, float],
+        accel_vec: tuple[float, float],
         attr: BodyAttributes,
         vertices: tuple[tuple[int, int], ...],
     ):
-        super().__init__(x_attr, y_attr, attr)
-        self.vertices = vertices
+        super().__init__(pos_vec, vel_vec, accel_vec, attr)
+        self.vertices: list[Vec2D]
+        for vertex in vertices:
+            self.vertices.append(Vec2D(*vertex))
 
     def print_attrs(self):
         super().print_attrs()
@@ -195,6 +170,6 @@ class Polygon(_Body):
         screen_vertices = []
         for vertex in self.vertices:
             screen_vertices.append(
-                self.attributes.coord_sys.coord(vertex[0], vertex[1])
+                self.attributes.coord_sys.coord(*vertex)
             )
         pygame.draw.polygon(screen, self.attributes.col, screen_vertices)

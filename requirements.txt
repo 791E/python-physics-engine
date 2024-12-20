@@ -1,1 +1,4 @@
+numpy==2.2.0
+pyasn1==0.6.1
 pygame==2.6.1
+rsa==4.9

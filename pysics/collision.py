@@ -16,10 +16,6 @@ def ball_ball_collisions(
     Args:
         spacial_map (dict[tuple[int, int], list[Body]]): The spacial hash map
             of every body in their respective cell
-        radius (int): Radius of the colliding balls. Use (Ball.ball_attributes.r)
-
-    Returns:
-        None
     """
     for cell_balls in spacial_map.values():
         for i, ball1 in enumerate(cell_balls):
