@@ -154,7 +154,7 @@ class Polygon(_Body):
         vertices: tuple[tuple[int, int], ...],
     ):
         super().__init__(pos_vec, vel_vec, accel_vec, attr)
-        self.vertices: list[Vec2D]
+        self.vertices: list[Vec2D] = []
         for vertex in vertices:
             self.vertices.append(Vec2D(*vertex))
 
