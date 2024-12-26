@@ -53,8 +53,6 @@ class Vec2D:
         if isinstance(factor, Vec2D):
             return Vec2D(*(self.components * factor.components))
 
-        raise TypeError(f"Type {type(factor)} cannot be multiplied with vec")
-
     def __truediv__(self, vec: Vec2D):
         """
         Let's you divide Vec2Ds with eachother, simply by doing something like:
@@ -62,19 +60,13 @@ class Vec2D:
         """
         return Vec2D(*(self.components / vec.components))
 
-    def __str__(self):
-        """
-        Returns the components of the vector as string.
-        """
-        return str(self.components)
-
     def __iter__(self):
         """
         Iterate over the magnitudes. Example usage (assuming vec is a Vec2D):
         sum(*vec) # does the same as
         sum(vec.components[0], vec.components[0])
         """
-        return iter(*self.components)
+        return iter(self.components)
 
     @property
     def magnitude(self):
@@ -113,7 +105,7 @@ class Vec2D:
     def angle(self, other_vec: Vec2D, deg: bool = False) -> float:
         """
         Calculate the angle between self.components and other_vec.components
-        Formats the output as degree, if deg=True is specified, uses radian by default.
+        Formats the output as degree if deg=True is specified, uses radian by default.
 
         Args:
             other_vec (Vec2D): The secondary vector which the angle should be taken from
