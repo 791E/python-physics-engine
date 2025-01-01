@@ -73,9 +73,9 @@ class _Body:
 
     def update_pos(self) -> None:
         """Calculate the body's new position based on position, velocity and acceleration"""
-        self.pos = self.pos + self.vel * self.attributes.dt
+        self.pos.components = self.pos.components + self.vel.components * self.attributes.dt
 
-        self.vel = self.vel.components + self.accel.components * self.attributes.dt
+        self.vel.components = self.vel.components + self.accel.components * self.attributes.dt
 
 
 @dataclass
@@ -162,8 +162,8 @@ class Polygon(_Body):
         super().print_attrs()
         print("\nPolygon specific attributes")
         print("Vertices:")
-        for i in len(self.vertices):
-            print(f"Vertex at index {i}: {self.vertices[i]}")
+        for i, vertex in enumerate(self.vertices):
+            print(f"Vertex at index {i}: {vertex}")
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""

@@ -1,7 +1,6 @@
 """Useful math functions for linear algebra"""
 
 from __future__ import annotations
-from typing import overload, Union
 import numpy as np
 
 
@@ -17,48 +16,6 @@ class Vec2D:
             y (float): y component of the vector
         """
         self.components = np.array([x, y])
-
-    def __add__(self, vec: Vec2D):
-        """
-        Let's you add Vec2Ds together, simply by doing something like:
-        vec3: Vec2D = vec1 + vec2
-        """
-        return Vec2D(*(self.components + vec.components))
-
-    def __sub__(self, vec: Vec2D):
-        """
-        Let's you subtract Vec2Ds, simply by doing something like:
-        vec3: Vec2D = vec1 - vec2
-        """
-        return Vec2D(*(self.components - vec.components))
-
-    @overload
-    def __mul__(self, factor: Vec2D) -> Vec2D:
-        ...
-
-    @overload
-    def __mul__(self, factor: float) -> Vec2D:
-        ...
-
-    def __mul__(self, factor: Union[Vec2D, float]):
-        """
-        Let's you multiply self.components with scalars (float) or vectors (Vec2D).
-        Examples:
-        vec3: Vec2D = vec1 * vec2
-        vec2: Vec2D = vec1 * scalar
-        """
-        if isinstance(factor, (float, int)):
-            return Vec2D(*(self.components * factor))
-
-        if isinstance(factor, Vec2D):
-            return Vec2D(*(self.components * factor.components))
-
-    def __truediv__(self, vec: Vec2D):
-        """
-        Let's you divide Vec2Ds with eachother, simply by doing something like:
-        vec3: Vec2D = vec1 / vec2
-        """
-        return Vec2D(*(self.components / vec.components))
 
     def __iter__(self):
         """
