@@ -20,22 +20,22 @@ class _Body:
     def __init__(
         self,
         coord_sys: CoordSys,
+        bounding_box_radius: float,
         pos_vec: tuple[float, float] = (0, 0),
         vel_vec: tuple[float, float] = (0, 0),
         accel_vec: tuple[float, float] = (0, 0),
         dt: float = 1,
         m: float = 1,
         col: tuple[int, ...] = (255, 255, 255, 255),
-        bounding_box_radius: float = 1,
     ):
+        self.coord_sys = coord_sys
+        self.bounding_box_radius = bounding_box_radius
         self.pos = Vec2D(*pos_vec)
         self.vel = Vec2D(*vel_vec)
         self.accel = Vec2D(*accel_vec)
-        self.coord_sys = coord_sys
         self.dt = dt
         self.m = m
         self.col = col
-        self.bounding_box_radius = bounding_box_radius
 
     def print_attrs(self) -> None:
         """Print all attributes for debugging purposes"""
@@ -65,7 +65,7 @@ class Ball(_Body):
             attr (BodyAttributes): Attributes that could be used for any Body
             ball_attr (BallAttributes): Ball specific attributes
         """
-        super().__init__(coord_sys, **kwargs)
+        super().__init__(coord_sys, bounding_box_radius=r, **kwargs)
         self.r = r
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -105,13 +105,14 @@ class Polygon(_Body):
         rotational_accel: float = 0,
         **kwargs,
     ):
-        super().__init__(coord_sys, **kwargs)
-
         self.vertices: list[Vec2D] = []
         for vertex in vertices:
             self.vertices.append(Vec2D(*vertex))
         self.rotational_vel = rotational_vel
         self.rotational_accel = rotational_accel
+        
+        bounding_box_radius = max(vertex.magnitude for vertex in self.vertices)
+        super().__init__(coord_sys, bounding_box_radius **kwargs)
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""
