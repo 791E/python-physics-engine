@@ -17,6 +17,9 @@ class Vec2D:
         """
         self.components = np.array([x, y])
 
+    def __str__(self):
+        return f"Vec2D: components: {self.components}, magnitude: {self.magnitude}"
+
     def __iter__(self):
         """
         Iterate over the magnitudes. Example usage (assuming vec is a Vec2D):
