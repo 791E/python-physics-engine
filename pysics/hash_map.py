@@ -1,10 +1,11 @@
 """Module for the creation of spacial hash maps"""
 
 from .body import _Body
+from .math_core import Vec2D
 
 
 def get_spacial_cell(
-    pos_x: float, pos_y: float, bounding_box: float, grid_size: int
+    pos_vec: Vec2D, bounding_box: float, grid_size: int
 ) -> tuple[tuple[int, int], ...]:
     """
     Calculates which cells a body should belong to based on the smallest
@@ -21,6 +22,7 @@ def get_spacial_cell(
     Returns:
         tuple[tuple[int, int],...]: A tuple of tuples of x and y coordinates of the cell
     """
+    pos_x, pos_y = pos_vec.components
 
     cell = int(pos_x // grid_size), int(pos_y // grid_size)
     cell_top = int(pos_x // grid_size), int((pos_y + bounding_box) // grid_size)
@@ -50,16 +52,15 @@ def generate_map(
             of every body in their respective cell
     """
     spacial_map: dict = {}
-    for i in bodies:
+    for body in bodies:
         cells = get_spacial_cell(
-            i.x.pos,
-            i.y.pos,
-            i.attributes.bounding_box_radius,
+            body.pos,
+            body.bounding_box_radius,
             grid_size,
         )
         for cell in cells:
             if cell not in spacial_map:
                 spacial_map[cell] = []
-            spacial_map[cell].append(i)
+            spacial_map[cell].append(body)
 
     return spacial_map
