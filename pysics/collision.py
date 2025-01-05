@@ -1,37 +1,40 @@
-"""Calculate collisions for all collision-enabled objects using a spacial hash map"""
+"""
+Using the separating axes theorem (SAT), calculate whether two bodies are colliding
+(intersecting) and push them apart using the minimum translation vector (MTV) as well
+as each bodies velocity, acceleration and mass. Also considers rotation for polygons.
+Here is a great article about SAT: https://dyn4j.org/2010/01/sat/ 
+"""
 
-import math
 from .body import _Body
+from .math_core import Vec2D
 
+def project_body_to_vec(body: _Body, projection_vec: Vec2D) -> tuple[Vec2D, Vec2D]:
+    """
+    Project a 2D body onto a 1D line (technically a Vec2D).
 
-def ball_ball_collisions(
-    spacial_map: dict[tuple[int, int], list[_Body]], radius: int
-) -> None:
+    Args:
+        body (_Body): The body that should be projected onto a vector
+        projection_vec (Vec2D): the 
+    """
+    pass
+
+def calc_min_translation_vec(body1: _Body, body2: _Body) -> Vec2D:
+    """
+    Calculate the minimum translation vector for two bodies, based on each body's 1D projection.
+
+    Args:
+        body1 (_Body): First body to check for overlap (e.g. body.Ball or body.Polygon)
+        body2 (_Body): Second body to check for overlap (e.g. body.Ball or body.Polygon)
+
+    Returns:
+        Vec2D: The minimum translation vector (null vector if the bodies don't overlap)
+    """
+
+def collide(spacial_map: dict[tuple[int, int], list[_Body]]) -> None:
     """
     Calculates collisions between two bodies based on the spacial hash map.
-    IMPORTANT: For now this only works, if all the bodies are Ball objects.
-    TODO: Change to / replace with something that can calculate elastic collisions
-    for polygons (all Body objects).
 
     Args:
         spacial_map (dict[tuple[int, int], list[Body]]): The spacial hash map
             of every body in their respective cell
     """
-    for cell_balls in spacial_map.values():
-        for i, ball1 in enumerate(cell_balls):
-            for _, ball2 in enumerate(cell_balls[i + 1 :]):
-                # Check distance between the two balls
-                dx = ball1.x.pos - ball2.x.pos
-                dy = ball1.y.pos - ball2.y.pos
-                # TODO: don't use math (use numpy)
-                distance = math.sqrt(dx**2 + dy**2)
-                if distance < 2 * radius:
-                    # Simple collision response: swap velocities
-                    ball1.x.vel, ball2.x.vel = (
-                        ball2.x.pos,
-                        ball1.x.pos,
-                    )
-                    ball1.y.vel, ball2.y.vel = (
-                        ball2.y.vel,
-                        ball1.y.vel,
-                    )

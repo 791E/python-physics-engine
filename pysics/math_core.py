@@ -52,6 +52,15 @@ class Vec2D:
 
         self.components = np.round(rot_matrix @ self.components, decimals=15)
 
+    def get_normal(self) -> Vec2D:
+        """
+        Calculate the normal vector (essentially a PI/2 rotation)
+
+        Returns:
+            The normal vector to self
+        """
+        return Vec2D(-self.magnitude[1], self.magnitude[0])
+
     def add(self, *other_vec: Vec2D) -> None:
         """
         Add another vector to self.vec
