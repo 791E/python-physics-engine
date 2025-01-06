@@ -110,9 +110,9 @@ class Polygon(_Body):
             self.vertices.append(Vec2D(*vertex))
         self.rotational_vel = rotational_vel
         self.rotational_accel = rotational_accel
-        
+
         bounding_box_radius = max(vertex.magnitude for vertex in self.vertices)
-        super().__init__(coord_sys, bounding_box_radius **kwargs)
+        super().__init__(coord_sys, bounding_box_radius, **kwargs)
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""
