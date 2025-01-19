@@ -1,66 +1,85 @@
 """Module for the creation of spacial hash maps"""
 
+from typing import Optional
 from .body import _Body
 from .math_core import Vec2D
 
 
-def get_spacial_cell(
-    pos_vec: Vec2D, bounding_box: float, grid_size: int
-) -> tuple[tuple[int, int], ...]:
+class HashMap:
     """
-    Calculates which cells a body should belong to based on the smallest
-    possible square bounding box. Calculates all possible cells where the center,
-    the right, the top or the top-right part of the body is.
-
+    Easily create hash maps for efficient collision detection.
     Args:
-        pos_x (float): x position of the body
-        pos_y (float): y position of the body
-        bounding_box (float): Half of a bodies smallest possible
-            encapsulating square's sidelength (Body.bounding_box_radius should be used)
-        grid_size (int): sidelength of one cell of the grid
-
-    Returns:
-        tuple[tuple[int, int],...]: A tuple of tuples of x and y coordinates of the cell
+        grid_size (int): size of each cell of the grid
+        bodies (list[_Body]): The list of every single body, that should collide
     """
-    pos_x, pos_y = pos_vec.components
+    def __init__(self, grid_size: int, bodies: list[_Body]):
+        self.grid_size = grid_size
+        self.bodies = bodies
 
-    cell = int(pos_x // grid_size), int(pos_y // grid_size)
-    cell_top = int(pos_x // grid_size), int((pos_y + bounding_box) // grid_size)
-    cell_top_right = int((pos_x + bounding_box) // grid_size), int(pos_y // grid_size)
-    cell_right = (
-        int((pos_x + bounding_box) // grid_size),
-        int((pos_y + bounding_box) // grid_size),
-    )
+    def get_spacial_cell(
+        self, pos_vec: Vec2D, bounding_box: float
+    ) -> tuple[tuple[int, int], ...]:
+        """
+        Calculates which cells a body should belong to based on the smallest
+        possible square bounding box. Calculates all possible cells where the center,
+        the right, the top or the top-right part of the body is.
 
-    # Use set() in order not to return duplicate values
-    unique_cells: set[tuple[int, int]] = {cell, cell_top, cell_top_right, cell_right}
-    return tuple(unique_cells)
+        Args:
+            pos_x (float): x position of the body
+            pos_y (float): y position of the body
+            bounding_box (float): Half of a bodies smallest possible
+                encapsulating square's sidelength (Body.bounding_box_radius should be used)
+            grid_size (int): sidelength of one cell of the grid
 
+        Returns:
+            tuple[tuple[int, int],...]: A tuple of tuples of x and y coordinates of the cell
+        """
+        pos_x, pos_y = pos_vec.components
 
-def generate_map(
-    bodies: list[_Body], grid_size: int
-) -> dict[tuple[int, int], list[_Body]]:
-    """
-    Generate a dictionary of cells populated with balls
-
-    Args:
-        bodies (list[Body]): The list of every body
-        grid_size (int): The sidelength of one cell in the grid
-
-    Returns:
-        dict[tuple[int, int], list[Body]]: The spacial hash map
-            of every body in their respective cell
-    """
-    spacial_map: dict = {}
-    for body in bodies:
-        cells = get_spacial_cell(
-            body.pos,
-            body.bounding_box_radius,
-            grid_size,
+        cell = int(pos_x // self.grid_size), int(pos_y // self.grid_size)
+        cell_top = int(pos_x // self.grid_size), int((pos_y + bounding_box) // self.grid_size)
+        cell_top_right = int((pos_x + bounding_box) // self.grid_size), int(
+            pos_y // self.grid_size
         )
-        for cell in cells:
-            if cell not in spacial_map:
-                spacial_map[cell] = []
-            spacial_map[cell].append(body)
+        cell_right = (
+            int((pos_x + bounding_box) // self.grid_size),
+            int((pos_y + bounding_box) // self.grid_size),
+        )
 
-    return spacial_map
+        # Use set() in order not to return duplicate values
+        unique_cells: set[tuple[int, int]] = {
+            cell,
+            cell_top,
+            cell_top_right,
+            cell_right,
+        }
+        return tuple(unique_cells)
+
+    def generate_map(
+        self, bodies: Optional[list[_Body]]
+    ) -> dict[tuple[int, int], list[_Body]]:
+        """
+        Generate a dictionary of cells populated with balls
+
+        Args:
+            bodies (list[Body]): (optional) The list of every body.
+                If the argument is omitted, the original list of bodies will be used.
+
+        Returns:
+            dict[tuple[int, int], list[Body]]: The spacial hash map
+                of every body in their respective cell
+        """
+        if not bodies:
+            bodies = self.bodies
+        spacial_map: dict = {}
+        for body in bodies:
+            cells = self.get_spacial_cell(
+                body.pos,
+                body.bounding_box_radius,
+            )
+            for cell in cells:
+                if cell not in spacial_map:
+                    spacial_map[cell] = []
+                spacial_map[cell].append(body)
+
+        return spacial_map
