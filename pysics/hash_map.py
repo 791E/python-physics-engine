@@ -56,7 +56,7 @@ class HashMap:
         return tuple(unique_cells)
 
     def generate_map(
-        self, bodies: Optional[list[_Body]]
+        self, bodies: Optional[list[_Body]] = None
     ) -> dict[tuple[int, int], list[_Body]]:
         """
         Generate a dictionary of cells populated with balls
