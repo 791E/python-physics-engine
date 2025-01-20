@@ -81,7 +81,7 @@ class Vec2D:
             deg (bool): Whether or not to convert the result from radians to degrees
         """
         dot_product = np.dot(self.components, other_vec.components)
-        magnitudes_product = np.sqrt(np.square(self.components) * np.square(other_vec.components))
+        magnitudes_product = self.magnitude * other_vec.magnitude
 
         if deg:
             return np.round(np.arccos(dot_product / magnitudes_product) * 180 / np.pi, decimals=14)
