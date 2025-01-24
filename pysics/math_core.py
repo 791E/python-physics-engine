@@ -87,3 +87,7 @@ class Vec2D:
             return np.round(np.arccos(dot_product / magnitudes_product) * 180 / np.pi, decimals=14)
 
         return np.arccos(dot_product / magnitudes_product)
+
+    def world_angle(self, deg: bool = False):
+        """Calculate the angle relative to the x-axis (which i define to be the world angle)"""
+        return self.angle(Vec2D(1, 0), deg)
