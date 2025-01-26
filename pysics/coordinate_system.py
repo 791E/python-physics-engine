@@ -9,13 +9,27 @@ import pygame
 class CoordSys:
     """Apply a coordinate system to a pygame screen"""
 
-    def __init__(self, display: pygame.Surface, x_length: int = 1280, y_length: int = 720) -> None:
+    def __init__(
+        self, display: pygame.Surface, x_length: int = 1280, y_length: int = 720
+    ) -> None:
         self.display: pygame.Surface = display
         self.x_tot: int = x_length
         self.y_tot: int = y_length
 
     def __repr__(self) -> str:
         return f"< Coordinate System ([0, {self.x_tot}], [0, {self.y_tot}]) >"
+
+    def __hash__(self):
+        return hash((self.display, self.x_tot, self.y_tot))
+
+    def __eq__(self, other):
+        if isinstance(other, CoordSys):
+            return (
+                self.display == other.display
+                and self.x_tot == other.x_tot
+                and self.y_tot == other.y_tot
+            )
+        return False
 
     def _update_dimensions(self) -> tuple[float, float, float, float, float]:
         scale: float

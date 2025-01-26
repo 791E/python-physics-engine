@@ -37,6 +37,34 @@ class _Body:
         self.m = m
         self.col = col
 
+    def __hash__(self):
+        return hash(
+            (
+                self.coord_sys,
+                self.bounding_box_radius,
+                self.pos,
+                self.vel,
+                self.accel,
+                self.dt,
+                self.m,
+                self.col,
+            )
+        )
+
+    def __eq__(self, other):
+        if isinstance(other, _Body):
+            return (
+                self.coord_sys == other.coord_sys
+                and self.bounding_box_radius == other.bounding_box_radius
+                and self.pos == other.pos
+                and self.vel == other.vel
+                and self.accel == other.accel
+                and self.dt == other.dt
+                and self.m == other.m
+                and self.col == other.col
+            )
+        return False
+
     def print_attrs(self) -> None:
         """Print all attributes for debugging purposes"""
         print(f"{'\n'*3}{self}\n")
@@ -67,6 +95,14 @@ class Ball(_Body):
         """
         super().__init__(coord_sys, bounding_box_radius=r, **kwargs)
         self.r = r
+
+    def __hash__(self):
+        return hash((super().__hash__(), self.r))
+
+    def __eq__(self, other):
+        if isinstance(other, Ball):
+            return super().__eq__(other) and self.r == other.r
+        return False
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""
@@ -113,6 +149,26 @@ class Polygon(_Body):
 
         bounding_box_radius = max(vertex.magnitude for vertex in self.vertices)
         super().__init__(coord_sys, bounding_box_radius, **kwargs)
+
+    def __hash__(self):
+        return hash(
+            (
+                super().__hash__(),
+                self.vertices,
+                self.rotational_vel,
+                self.rotational_accel,
+            )
+        )
+
+    def __eq__(self, other):
+        if isinstance(other, Polygon):
+            return (
+                super().__eq__(other)
+                and self.vertices == other.vertices
+                and self.rotational_vel == other.rotational_vel
+                and self.rotational_accel == other.rotational_accel
+            )
+        return False
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw itself at it's position on the pygame screen"""

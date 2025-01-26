@@ -28,6 +28,14 @@ class Vec2D:
         """
         return iter(self.components)
 
+    def __hash__(self):
+        return hash((self.components[0], self.components[1]))
+
+    def __eq__(self, other):
+        if isinstance(other, Vec2D):
+            return self.components == other.components
+        return False
+
     @property
     def magnitude(self):
         """
