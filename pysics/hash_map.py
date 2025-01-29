@@ -1,8 +1,7 @@
 """Module for the creation of spacial hash maps"""
 
 from typing import Optional
-from .body import _Body
-from .math_core import Vec2D
+from pysics import _Body, Vec2D
 
 
 class HashMap:
