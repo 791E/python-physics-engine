@@ -98,4 +98,10 @@ class Vec2D:
 
     def world_angle(self, deg: bool = False):
         """Calculate the angle relative to the x-axis (which i define to be the world angle)"""
-        return self.angle(Vec2D(1, 0), deg)
+        if self.components[1] < 0:
+            if deg:
+                return self.angle(Vec2D(1, 0), deg)
+            return self.angle(Vec2D(1, 0))
+        if deg:
+            return 360 - self.angle(Vec2D(1, 0), deg)
+        return 2 * np.pi - self.angle(Vec2D(1, 0))
