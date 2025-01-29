@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 import pygame
-from pysics import CoordSys, Vec2D
+from .coordinate_system import CoordSys
+from .math_core import Vec2D
 
 
 @dataclass(init=False, repr=False)
