@@ -124,10 +124,10 @@ class Ball(_Body):
         super().update_pos()
 
         if wall_collision:
-            if not self.pos.components[0] in range(self.coord_sys.x_tot):
-                self.pos.components[0] *= -1
-            if not self.pos.components[1] in range(self.coord_sys.y_tot):
-                self.pos.components[1] *= -1
+            if self.pos.components[0] - self.r < 0 or self.pos.components[0] + self.r > self.coord_sys.x_tot:
+                self.vel.components[0] *= -1
+            if self.pos.components[1] - self.r < 0 or self.pos.components[1] + self.r > self.coord_sys.y_tot:
+                self.vel.components[1] *= -1
 
 
 class Polygon(_Body):
