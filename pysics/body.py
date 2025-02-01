@@ -21,13 +21,25 @@ class _Body:
         self,
         coord_sys: CoordSys,
         bounding_box_radius: float,
+        dt: float,
         pos_vec: tuple[float, float] = (0, 0),
         vel_vec: tuple[float, float] = (0, 0),
         accel_vec: tuple[float, float] = (0, 0),
-        dt: float = 1,
         m: float = 1,
         col: tuple[int, ...] = (255, 255, 255, 255),
     ):
+        """
+        Args:
+            coord_sys (CoordSys): The coordinate system that the body is in
+            bounding_box_radius (float): The smallest box that can contain the body
+            dt (float): The time step for the Euler-Chromer method.
+                Ideally, the pygame frame rate should be used
+            pos_vec (tuple[float, float]): The position of the body as a vector
+            vel_vec (tuple[float, float]): The velocity of the body as a vector
+            accel_vec (tuple[float, float]): The acceleration of the body as a vector
+            m (float): The mass of the body
+            col (tuple[int, ...]): The color of the body (RGB or RGBA)
+        """
         self.coord_sys = coord_sys
         self.bounding_box_radius = bounding_box_radius
         self.pos = Vec2D(*pos_vec)
@@ -79,21 +91,29 @@ class _Body:
 
     def update_pos(self) -> None:
         """Calculate the body's new position based on position, velocity and acceleration"""
-        self.pos.components = self.pos.components + self.vel.components * self.dt
+        self.pos.components = self.pos.components + self.vel.components * 50 / self.dt
 
-        self.vel.components = self.vel.components + self.accel.components * self.dt
+        self.vel.components = self.vel.components + self.accel.components * 50 / self.dt
 
 
 class Ball(_Body):
     """The simplest shape for collisions: a ball"""
 
-    def __init__(self, coord_sys: CoordSys, r: float = 1, **kwargs):
+    def __init__(self, coord_sys: CoordSys, r: float, dt: float, **kwargs):
         """
         Args:
-            attr (BodyAttributes): Attributes that could be used for any Body
-            ball_attr (BallAttributes): Ball specific attributes
+            coord_sys (CoordSys): The coordinate system that the body is in
+            r (float): The radius of the ball
+            dt (float): The time step for the Euler-Chromer method.
+                Ideally, the pygame frame rate should be used
+            
+        Optional Args:
+            pos_vec (tuple[float, float]): The position of the body as a vector
+            vel_vec (tuple[float, float]): The velocity of the body as a vector
+            accel_vec (tuple[float, float]): The acceleration of the body as a vector
+            m (float): The mass of the body
         """
-        super().__init__(coord_sys, bounding_box_radius=r, **kwargs)
+        super().__init__(coord_sys=coord_sys, bounding_box_radius=r, dt=dt, **kwargs)
         self.r = r
 
     def __hash__(self):
@@ -136,11 +156,27 @@ class Polygon(_Body):
     def __init__(
         self,
         coord_sys: CoordSys,
+        dt: float,
         vertices: tuple[tuple[int, int], ...],
         rotational_vel: float = 0,
         rotational_accel: float = 0,
         **kwargs,
     ):
+        """
+        Args:
+            coord_sys (CoordSys): The coordinate system that the body is in
+            dt (float): The time step for the Euler-Chromer method.
+                Ideally, the pygame frame rate should be used
+            vertices (tuple[tuple[int, int], ...]): The vertices of the polygon
+            rotational_vel (float): The rotational velocity of the polygon
+            rotational_accel (float): The rotational acceleration of the polygon
+
+        Optional Args:
+            pos_vec (tuple[float, float]): The position of the body as a vector
+            vel_vec (tuple[float, float]): The velocity of the body as a vector
+            accel_vec (tuple[float, float]): The acceleration of the body as a vector
+            m (float): The mass of the body
+        """
         self.vertices: list[Vec2D] = []
         for vertex in vertices:
             self.vertices.append(Vec2D(*vertex))
@@ -148,7 +184,7 @@ class Polygon(_Body):
         self.rotational_accel = rotational_accel
 
         bounding_box_radius = max(vertex.magnitude for vertex in self.vertices)
-        super().__init__(coord_sys, bounding_box_radius, **kwargs)
+        super().__init__(coord_sys=coord_sys, bounding_box_radius=bounding_box_radius, dt=dt, **kwargs)
 
     def __hash__(self):
         return hash(

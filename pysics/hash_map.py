@@ -9,11 +9,13 @@ from .math_core import Vec2D
 class HashMap:
     """
     Easily create hash maps for efficient collision detection.
-    Args:
-        grid_size (int): size of each cell of the grid
-        bodies (list[_Body]): The list of every single body, that should collide
     """
     def __init__(self, grid_size: int, bodies: list[_Body]):
+        """
+        Args:
+            grid_size (int): The sidelength of one cell of the grid
+            bodies (list[Body]): The list of every body
+        """
         self.grid_size = grid_size
         self.bodies = bodies
 

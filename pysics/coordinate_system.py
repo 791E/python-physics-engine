@@ -50,7 +50,8 @@ class CoordSys:
         )
 
     def distance(self, d: float) -> float:
-        """Return the distance in the coordinate system as pixels on the pygame screen
+        """
+        Return the distance in the coordinate system as pixels on the pygame screen
 
         Args:
             d (float): The distance which will be converted
@@ -61,7 +62,8 @@ class CoordSys:
         return self._update_dimensions()[0] * d
 
     def coord(self, x: float, y: float) -> tuple[float, float]:
-        """Return the coordinate in the coordinate system as coordinate on the pygame screen
+        """
+        Return the coordinate in the coordinate system as coordinate on the pygame screen
 
         Args:
             x (float): The x-coordinate which will be converted
