@@ -105,3 +105,14 @@ class Vec2D:
         if deg:
             return 360 - self.angle(Vec2D(1, 0), deg)
         return 2 * np.pi - self.angle(Vec2D(1, 0))
+
+    def normalize(self) -> Vec2D:
+        """
+        Normalize the vector (make it a unit vector)
+
+        Returns:
+            Vec2D: The normalized vector
+        """
+        if self.magnitude == 0:
+            return Vec2D(0, 0)
+        return Vec2D(*(self.components / self.magnitude))
