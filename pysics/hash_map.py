@@ -1,6 +1,7 @@
 """Module for the creation of spacial hash maps"""
 
 from typing import Optional
+import numpy as np
 from .body import _Body
 from .math_core import Vec2D
 
@@ -36,11 +37,16 @@ class HashMap:
         """
         pos_x, pos_y = pos_vec.components
 
-        cell = int(pos_x // self.grid_size), int(pos_y // self.grid_size)
-        cell_top = int(pos_x // self.grid_size), int((pos_y + bounding_box) // self.grid_size)
-        cell_top_right = int((pos_x + bounding_box) // self.grid_size), int(
+        if np.isnan(pos_x):
+            pos_x = 0
+        if np.isnan(pos_y):
+            pos_y = 0
+
+        cell = (int(pos_x // self.grid_size), int(pos_y // self.grid_size))
+        cell_top = (int(pos_x // self.grid_size), int((pos_y + bounding_box) // self.grid_size))
+        cell_top_right = (int((pos_x + bounding_box) // self.grid_size), int(
             pos_y // self.grid_size
-        )
+        ))
         cell_right = (
             int((pos_x + bounding_box) // self.grid_size),
             int((pos_y + bounding_box) // self.grid_size),
