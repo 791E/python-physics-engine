@@ -8,7 +8,7 @@ screen: pygame.Surface = pygame.display.set_mode((1280, 720), flags=pygame.RESIZ
 clock: pygame.time.Clock = pygame.time.Clock()
 RUNNING: bool = True
 
-FRAME_RATE: int = 50
+FRAME_RATE: int = 120
 
 # initialize pysics
 
@@ -36,7 +36,7 @@ for row in range(rows):
                 dt=FRAME_RATE,
                 pos_vec=(x, y),
                 vel_vec=(0, 0),
-                col=(255, 0, 0),
+                col=(0, 255, 0),
                 m=1,
             )
         )
