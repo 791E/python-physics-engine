@@ -47,22 +47,36 @@ class BallCollider:
             normal: Vec2D = Vec2D(dx / distance, dy / distance)
 
             # Velocity components along normal
-            velocity1_normal: float = np.dot(colliding_ball.vel.components, normal.components)
-            velocity2_normal: float = np.dot(secondary_ball.vel.components, normal.components)
+            velocity1_normal: float = np.dot(
+                colliding_ball.vel.components, normal.components
+            )
+            velocity2_normal: float = np.dot(
+                secondary_ball.vel.components, normal.components
+            )
 
             # Fully elastic collision
             velocity1_normal_after: float = (
-                velocity1_normal * (colliding_ball.m - secondary_ball.m) + 2 * secondary_ball.m * velocity2_normal
+                velocity1_normal * (colliding_ball.m - secondary_ball.m)
+                + 2 * secondary_ball.m * velocity2_normal
             ) / (colliding_ball.m + secondary_ball.m)
             velocity2_normal_after: float = (
-                velocity2_normal * (secondary_ball.m - colliding_ball.m) + 2 * colliding_ball.m * velocity1_normal
+                velocity2_normal * (secondary_ball.m - colliding_ball.m)
+                + 2 * colliding_ball.m * velocity1_normal
             ) / (colliding_ball.m + secondary_ball.m)
 
-            velocity1_normal_vector: np.ndarray = normal.components * (velocity1_normal_after - velocity1_normal)
-            velocity2_normal_vector: np.ndarray = normal.components * (velocity2_normal_after - velocity2_normal)
+            velocity1_normal_vector: np.ndarray = normal.components * (
+                velocity1_normal_after - velocity1_normal
+            )
+            velocity2_normal_vector: np.ndarray = normal.components * (
+                velocity2_normal_after - velocity2_normal
+            )
 
-            new_colliding_ball_velocity: np.ndarray = colliding_ball.vel.components + velocity1_normal_vector
-            new_secondary_ball_velocity: np.ndarray = secondary_ball.vel.components + velocity2_normal_vector
+            new_colliding_ball_velocity: np.ndarray = (
+                colliding_ball.vel.components + velocity1_normal_vector
+            )
+            new_secondary_ball_velocity: np.ndarray = (
+                secondary_ball.vel.components + velocity2_normal_vector
+            )
 
             # Separate balls to prevent overlap
             overlap: float = (colliding_ball.r + secondary_ball.r - distance) / 2

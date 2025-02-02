@@ -106,7 +106,7 @@ class Ball(_Body):
             r (float): The radius of the ball
             dt (float): The time step for the Euler-Chromer method.
                 Ideally, the pygame frame rate should be used
-            
+
         Optional Args:
             pos_vec (tuple[float, float]): The position of the body as a vector
             vel_vec (tuple[float, float]): The velocity of the body as a vector
@@ -144,9 +144,15 @@ class Ball(_Body):
         super().update_pos()
 
         if wall_collision:
-            if self.pos.components[0] - self.r < 0 or self.pos.components[0] + self.r > self.coord_sys.x_tot:
+            if (
+                self.pos.components[0] - self.r < 0
+                or self.pos.components[0] + self.r > self.coord_sys.x_tot
+            ):
                 self.vel.components[0] *= -1
-            if self.pos.components[1] - self.r < 0 or self.pos.components[1] + self.r > self.coord_sys.y_tot:
+            if (
+                self.pos.components[1] - self.r < 0
+                or self.pos.components[1] + self.r > self.coord_sys.y_tot
+            ):
                 self.vel.components[1] *= -1
 
 
@@ -184,7 +190,12 @@ class Polygon(_Body):
         self.rotational_accel = rotational_accel
 
         bounding_box_radius = max(vertex.magnitude for vertex in self.vertices)
-        super().__init__(coord_sys=coord_sys, bounding_box_radius=bounding_box_radius, dt=dt, **kwargs)
+        super().__init__(
+            coord_sys=coord_sys,
+            bounding_box_radius=bounding_box_radius,
+            dt=dt,
+            **kwargs,
+        )
 
     def __hash__(self):
         return hash(

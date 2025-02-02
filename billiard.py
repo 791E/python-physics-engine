@@ -1,6 +1,11 @@
+"""
+Billiard simulation with pysics
+"""
+
+
+import math
 import pygame
 from pysics import _Body, Ball, CoordSys, HashMap, BallCollider
-import math
 
 # initialise pygame
 pygame.init()
