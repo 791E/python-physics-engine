@@ -1,4 +1,4 @@
-# A simple physics/simulation engine written in python with pygame
+# A simple physics/simulation engine written in python for pygame
 This is a simple physics engine to simulate interactions between bodies, mainly based on newtonian physics. It's core is the python module `pysics`, which is a combination of the words 'python' and 'physics'.
 # Features
 - [Spacial hash map](pysics/hash_map.py): Divide space into cells for efficient collision detection
